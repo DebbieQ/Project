@@ -22,8 +22,8 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      -checkout
-      -run:
+      - checkout
+      - run:
          name: "echo an environment variable I created for this project"
          command: |
              echo Debbie
