@@ -18,6 +18,15 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
+  Print-name:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      -checkout
+      -run:
+         name: "echo an environment variable I created for this project"
+         command: |
+             echo Debbie
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
