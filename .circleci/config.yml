@@ -64,14 +64,12 @@ jobs:
           command: |
             npm login
             npm install
-            npm run build
-            cp .env dist/.env
-            pwd && ls -al
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/backend/dist
-            - project/backend/node_modules
+            npm run start
+      # - persist_to_workspace:
+      #     root: ~/
+      #     paths:
+      #       - project/backend/dist
+      #       - project/backend/node_modules
       # - save_cache:
       #     paths: [backend/node_modules]
       #     key: backend-build
