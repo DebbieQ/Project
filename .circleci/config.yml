@@ -47,9 +47,9 @@ jobs:
             npm install
             npm run build
 
-      # - save_cache:
-      #     paths: [frontend/node_modules]
-      #     key: frontend-build
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
 
   build-backend:
     docker:
@@ -64,14 +64,9 @@ jobs:
             cd backend
             npm install
             npm run build
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - project/backend/dist
-      #       - project/backend/node_modules
-      # - save_cache:
-      #     paths: [backend/node_modules]
-      #     key: backend-build
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
 
 #   test-frontend:
 #     docker:
