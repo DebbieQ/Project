@@ -6,7 +6,7 @@ commands:
   #     - run:
   #         name: Install tar and gzip
   #         command: |
-  #           sudo apt install -y tar gzip
+  #           sudo apt install -y tar gzip curl software-properties-common
   #     - run:
   #         name: Installing aws-cli
   #         command: |
@@ -192,29 +192,35 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      Here's where you will add some code to rollback on failure
 
-  # configure-infrastructure:
-  #   docker:
-  #     # Docker image here that supports Ansible
-  #   steps:
-  #     # Checkout code from git
-  #     # Add ssh keys with fingerprint
-  #     # attach workspace
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  # Here's where you will add some code to rollback on failure
-
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["6a:f4:d5:c7:6d:38:48:61:f3:af:75:60:7a:e4:26:69"]
+      - attach_workspace: 
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update --ugrade ansible
+            apk add --no-cache aws-cli
+            apk add --ugrade tar
+            apk add --ugrade gzip
+      - run:
+          name: Configure server
+          command: |
+            cat ~/project/.circleci/ansible/inventory.txt
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml   
+  
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
   # run-migrations:
   #   docker:
   #     # Docker image here that supports NodeJS
