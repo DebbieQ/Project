@@ -207,10 +207,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --ugrade ansible
+            apk add --update ansible
             apk add --no-cache aws-cli
-            apk add --ugrade tar
-            apk add --ugrade gzip
+            apk add --update tar
+            apk add --update gzip
       - run:
           name: Configure server
           command: |
