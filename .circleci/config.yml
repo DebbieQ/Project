@@ -211,6 +211,7 @@ jobs:
             pip3 install awscli
             apk add --update tar
             apk add --update gzip
+            apk add --update curl
       - run:
           name: Configure server
           command: |
