@@ -212,6 +212,7 @@ jobs:
             apk add --update tar
             apk add --update gzip
             apk add --update curl
+            apk add openssh-client
       - run:
           name: Configure server
           command: |
