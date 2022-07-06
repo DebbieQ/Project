@@ -194,7 +194,6 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      Here's where you will add some code to rollback on failure
 
   configure-infrastructure:
     docker:
@@ -203,7 +202,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["6a:f4:d5:c7:6d:38:48:61:f3:af:75:60:7a:e4:26:69"]
-      - attach_workspace: 
+      - attach_workspace:
           at: ~/
       - run:
           name: Install dependencies
@@ -217,8 +216,8 @@ jobs:
           command: |
             cat ~/project/.circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml   
-  
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
   # run-migrations:
@@ -351,8 +350,8 @@ workflows:
           filters:
             branches:
               only: [test-feature-branch]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
