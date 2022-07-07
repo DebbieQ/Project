@@ -325,35 +325,47 @@ jobs:
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  smoke-test:
+smoke-test-backend:
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
-            pip3 install awscli
             apk add --update curl
-            apk add --update nodejs npm
+            pip install awscli
       - run:
           name: Backend smoke test
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            API_URL="http://${BACKEND_IP}:3030"
-            curl "${API_URL}/api/status"
-
+             BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+             API_URL="http://${BACKEND_IP}:3030"
+             curl "${API_URL}/api/status"
+  smoke-test-frontend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
       - run:
-          name: Frontend smoke test.
+          name: Install dependencies
           command: |
-            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-1.amazonaws.com"             
+            apk add --update curl
+            pip install awscli
+      - run:
+          name: Smoke test for front end
+          command: |
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com"             
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
               exit 0
             else
               exit 1
-            fi
+            fi           
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
