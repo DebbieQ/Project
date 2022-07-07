@@ -278,7 +278,7 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive  
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -289,7 +289,7 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      - checkout 
+      - checkout
       - add_ssh_keys:
           fingerprints: ["6a:f4:d5:c7:6d:38:48:61:f3:af:75:60:7a:e4:26:69"]
       - attach_workspace:
@@ -318,11 +318,11 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
 
-        - destroy-environment:
-            workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-        - revert-migrations:
+      - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+
 #   smoke-test:
 #     docker:
 #       # Lightweight Docker image
