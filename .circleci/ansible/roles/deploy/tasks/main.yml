@@ -3,17 +3,16 @@
     path: home/ubuntu/backend-app
     state: directory
 
-- name: "copy files"
-  become: true
-  copy:
-    src: /root/project/artifact.tar.gz
+- name: "unarchive files"
+  unarchive:
+    src: artifact.tar.gz
     dest: /home/ubuntu/backend-app
 
-- name: "Unarchive"
-  become: true
-  shell: |
-    cd /home/ubuntu/backend-app
-    tar xvzf artifact.tar.gz -C .
+# - name: "Unarchive"
+#   become: true
+#   shell: |
+#     cd /home/ubuntu/backend-app
+#     tar xvzf artifact.tar.gz -C .
 
 - name: "run app"
   shell: |
