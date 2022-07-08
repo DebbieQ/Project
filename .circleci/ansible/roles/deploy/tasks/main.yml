@@ -1,6 +1,6 @@
 - name: "Create backend app directory"
   file:
-    path: homw/ubuntu/backend-app
+    path: home/ubuntu/backend-app
     state: directory
 
 - name: "copy files"
