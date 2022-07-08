@@ -1,33 +1,3 @@
-# - name: "Create backend app directory"
-#   file:
-#     path: home/ubuntu/backend-app
-#     state: directory
-
-# - name: "copy files"
-#   become: true
-#   copy:
-#     src: /root/project/artifact.tar.gz
-#     dest: /home/ubuntu/backend-app
-
-# - name: "install tar"
-#   become: true
-#   apt:
-#     name: ["tar", "gzip"]
-#     state: present
-
-# - name: "Unarchive"
-#   become: true
-#   shell: |
-#     cd /home/ubuntu/backend-app
-#     tar xvzf artifact.tar.gz
-
-# - name: "run app"
-#   shell: |
-#     cd home/ubuntu/backend-app
-#     npm install
-#     pm2 stop default
-#     pm2 start npm -- start
-
 - name: Copy files
   become: true
   copy:
@@ -44,15 +14,16 @@
     cd /home/ubuntu/
     npm install
     pm2 stop default
-    pm2 start npm -- start
-  environment:
-    ENVIRONMENT: production
-    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-    TYPEORM_MIGRATIONS_DIR: "./migrations"
-    TYPEORM_MIGRATIONS: "./migrations/*.js"
-    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
-    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+    pm2 start main.js
+    env PATH=$PATH:/usr/local/bin pm2 startupsystemd -u ubuntu --hp /home/ubuntu
+  # environment:
+  #   ENVIRONMENT: production
+  #   TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+  #   TYPEORM_MIGRATIONS_DIR: "./migrations"
+  #   TYPEORM_MIGRATIONS: "./migrations/*.js"
+  #   TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+  #   TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+  #   TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+  #   TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+  #   TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+  #   TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
