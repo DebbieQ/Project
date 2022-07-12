@@ -1,30 +1,43 @@
 ---
-- name: Extract files
+- name: "Install Dependencies"
   become: true
-  unarchive:
-    src: files/artifact.tar.gz
-    dest: /home/ubuntu
-# - name: Unarchive
-#   become: true
-#   shell: |
-#     cd /home/ubuntu/
-#     tar xvzf artifact.tar.gz -C .
-
-- name: "run server"
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+- name: Install pm2
+  become: true
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+- name: Creates Directory
+  become: true
+  file:
+    path: ~/backend
+    state: directory
+    mode: 0755
+- name: Copy backend dist files web server
+  become: true
+  copy:
+    src: ~/project/artifact.tar.gz
+    dest: ~/backend/artifact.tar.gz
+- name: Unarchive
   become: true
   shell: |
-    cd /home/ubuntu/
+    cd ~/backend
+    tar xvzf artifact.tar.gz -C .
+
+- name: "run backend"
+  become: true
+  shell: |
+    cd ~/backend
     npm install
     pm2 stop default
-    pm2 start npm -- start
-  environment:
-    ENVIRONMENT: production
-    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-    TYPEORM_MIGRATIONS_DIR: "./migrations"
-    TYPEORM_MIGRATIONS: "./migrations/*.js"
-    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
-    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+    pm2 start npm --name "backend" -- run start
+    cd dist
+    pm2 start main.js --update-env
+  args:
+    chdir: /root/backend/dist
+  register: shell_output
