@@ -21,6 +21,7 @@
     name: npm
     state: latest
     update_cache: yes
+
 - name: Install pm2
   become: true
   npm:
@@ -28,17 +29,20 @@
     global: yes
     production: yes
     state: present
+
 - name: Creates Directory
   become: true
   file:
     path: ~/backend
     state: directory
     mode: 0755
+
 - name: Copy backend dist files web server
   become: true
   copy:
     src: ~/project/artifact.tar.gz
     dest: ~/backend/artifact.tar.gz
+
 - name: Unarchive
   become: true
   shell: |
