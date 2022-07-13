@@ -406,7 +406,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-            - run:
+      - run:
           name: Install curl
           command: |
             sudo apt install -y curl
