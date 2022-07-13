@@ -345,6 +345,7 @@ jobs:
             cat .circleci/ansible/inventory.txt
             API_URL="http://${BACKEND_IP}:3030"
             curl "${API_URL}/api/status"
+
   smoke-test-frontend:
     docker:
       - image: python:3.7-alpine3.11
@@ -405,6 +406,16 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+            - run:
+          name: Install curl
+          command: |
+            sudo apt install -y curl
+      - run:
+          name: Installing aws-cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Get old stack workflow id
           command: |
