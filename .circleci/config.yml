@@ -446,7 +446,7 @@ jobs:
       #       aws cloudformation delete-stack --stack-name "udapeople-frontend-6f4e40c"
       #       aws cloudformation delete-stack --stack-name "udapeople-backend-6f4e40c"
       #     fi
-      #     f
+      #     fi
       - run:
           name: Remove old stacks and files
           command: |
