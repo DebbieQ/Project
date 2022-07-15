@@ -436,7 +436,8 @@ jobs:
             curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
             sudo apt install -y nodejs
             sudo apt install build-essential
-
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
